@@ -18,9 +18,6 @@ public class BrowseRegistryListener extends DefaultRegistryListener {
 
     private ArrayList<Device> mDevicesList = new ArrayList<Device>();
 
-    private ArrayList<Device> mDMSList = new ArrayList<Device>();
-    private ArrayList<Device> mDMRList = new ArrayList<Device>();
-
     public ArrayList<Device> getDevicesList(){
         return mDevicesList;
     }

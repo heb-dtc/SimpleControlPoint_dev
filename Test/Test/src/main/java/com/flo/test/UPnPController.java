@@ -8,10 +8,20 @@ import android.os.IBinder;
 import android.util.Log;
 import org.teleal.cling.android.AndroidUpnpService;
 import org.teleal.cling.android.AndroidUpnpServiceImpl;
+import org.teleal.cling.model.action.ActionInvocation;
+import org.teleal.cling.model.message.UpnpResponse;
+import org.teleal.cling.model.meta.Action;
 import org.teleal.cling.model.meta.Device;
+import org.teleal.cling.model.meta.Service;
+import org.teleal.cling.model.types.UDAServiceId;
 import org.teleal.cling.registry.RegistryListener;
+import org.teleal.cling.support.contentdirectory.callback.Browse;
+import org.teleal.cling.support.model.BrowseFlag;
+import org.teleal.cling.support.model.DIDLContent;
+import org.teleal.cling.support.model.item.Item;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Flo on 5/21/13.
@@ -35,9 +45,9 @@ public class UPnPController {
             mUPnPService = (AndroidUpnpService) iBinder;
             mIsCpStarted = true;
 
-            /*for (Device device : mUPnPService.getRegistry().getDevices()) {
-                //registryListener.
-            }*/
+            for (Device device : mUPnPService.getRegistry().getDevices()) {
+                mRegistryListener.deviceAdded(device);
+            }
 
             mUPnPService.getRegistry().addListener(mRegistryListener);
             mUPnPService.getControlPoint().search();
@@ -82,6 +92,35 @@ public class UPnPController {
                 mUPnPService.getRegistry().removeListener(mRegistryListener);
             }
             mContext.unbindService(serviceConnection);
+        }
+    }
+
+    public void browse(Device d, String id, BrowseFlag flag, final BrowseCallback cbInterface){
+        if(mIsCpStarted){
+            Log.i(TAG, "browse");
+
+            Service service = d.findService(new UDAServiceId("ContentDirectory"));
+
+            mUPnPService.getControlPoint().execute(new Browse(service, id, flag) {
+                @Override
+                public void received(ActionInvocation actionInvocation, DIDLContent didlContent) {
+                    Log.i(TAG, "browse, received");
+
+                    final List<Item> items = didlContent.getItems();
+
+                    cbInterface.browseResultList(items);
+                }
+
+                @Override
+                public void updateStatus(Status status) {
+                    Log.i(TAG, "browse, update status");
+                }
+
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+                    Log.i(TAG, "browse, failure");
+                }
+            });
         }
     }
 

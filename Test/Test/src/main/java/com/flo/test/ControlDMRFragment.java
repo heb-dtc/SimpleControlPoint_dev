@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class ControlDMRFragment extends ListFragment {
 
-    private ArrayAdapter<DeviceDisplay> mListAdapter;
+    private UPnPDeviceAdapter mListAdapter;
 
     public ControlDMRFragment() {
         // Empty constructor required for fragment subclasses
@@ -29,7 +29,7 @@ public class ControlDMRFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mListAdapter = new ArrayAdapter<DeviceDisplay>(getActivity(), android.R.layout.simple_list_item_1);
+        mListAdapter = new UPnPDeviceAdapter(getActivity());
         setListAdapter(mListAdapter);
 
         String page = "Control DMR";
@@ -40,10 +40,6 @@ public class ControlDMRFragment extends ListFragment {
 
     private void updateListViewContent(){
         ArrayList<DeviceDisplay> list = UPnPController.getInstance().getDmrList();
-
-        mListAdapter.clear();
-        for(DeviceDisplay d : list){
-            mListAdapter.add(d);
-        }
+        mListAdapter.updateDeviceList(list);
     }
 }
