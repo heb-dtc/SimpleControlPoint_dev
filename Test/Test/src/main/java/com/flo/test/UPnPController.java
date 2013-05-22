@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.util.Log;
 import org.teleal.cling.android.AndroidUpnpService;
 import org.teleal.cling.android.AndroidUpnpServiceImpl;
+import org.teleal.cling.model.meta.Device;
 import org.teleal.cling.registry.RegistryListener;
 
 import java.util.ArrayList;
@@ -84,16 +85,29 @@ public class UPnPController {
         }
     }
 
-    public ArrayList<String> getDmsNamesList(){
-        Log.i(TAG, "getDmsNamesList");
+    public ArrayList<DeviceDisplay> getDmsList(){
+        Log.i(TAG, "getDmsList");
 
-        ArrayList<String> dmsNames = new ArrayList<String>();
+        ArrayList<DeviceDisplay> dmsNames = new ArrayList<DeviceDisplay>();
 
         for(int i=0 ; i < mRegistryListener.getDMSList().size() ; i++){
             Log.i(TAG, "--> " + mRegistryListener.getDMSList().get(i).getDisplayString());
-            dmsNames.add(mRegistryListener.getDMSList().get(i).getDisplayString());
+            dmsNames.add(new DeviceDisplay(mRegistryListener.getDMSList().get(i)));
         }
 
         return dmsNames;
+    }
+
+    public ArrayList<DeviceDisplay> getDmrList(){
+        Log.i(TAG, "getDmrList");
+
+        ArrayList<DeviceDisplay> dmrNames = new ArrayList<DeviceDisplay>();
+
+        for(int i=0 ; i < mRegistryListener.getDMRList().size() ; i++){
+            Log.i(TAG, "--> " + mRegistryListener.getDMRList().get(i).getDisplayString());
+            dmrNames.add(new DeviceDisplay(mRegistryListener.getDMRList().get(i)));
+        }
+
+        return dmrNames;
     }
 }

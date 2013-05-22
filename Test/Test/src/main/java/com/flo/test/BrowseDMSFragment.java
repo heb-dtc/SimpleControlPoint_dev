@@ -1,6 +1,5 @@
 package com.flo.test;
 
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +14,8 @@ import java.util.ArrayList;
  */
 public class BrowseDMSFragment extends ListFragment {
 
+    private ArrayAdapter<DeviceDisplay> mListAdapter;
+
     public BrowseDMSFragment() {
         // Empty constructor required for fragment subclasses
     }
@@ -28,11 +29,21 @@ public class BrowseDMSFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ArrayList<String> mDMSList = UPnPController.getInstance().getDmsNamesList();
-
-        setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mDMSList));
+        mListAdapter = new ArrayAdapter<DeviceDisplay>(getActivity(), android.R.layout.simple_list_item_1);
+        setListAdapter(mListAdapter);
 
         String page = "Browse DMS";
         getActivity().setTitle(page);
+
+        updateListViewContent();
+    }
+
+    private void updateListViewContent(){
+        ArrayList<DeviceDisplay> list = UPnPController.getInstance().getDmsList();
+
+        mListAdapter.clear();
+        for(DeviceDisplay d : list){
+            mListAdapter.add(d);
+        }
     }
 }

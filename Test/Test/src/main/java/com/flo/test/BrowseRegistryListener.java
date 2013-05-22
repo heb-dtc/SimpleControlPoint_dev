@@ -26,11 +26,27 @@ public class BrowseRegistryListener extends DefaultRegistryListener {
     }
 
     public ArrayList<Device> getDMSList(){
-        return mDevicesList;
+        ArrayList<Device> list = new ArrayList<Device>();
+
+        for(Device d : mDevicesList){
+            DeviceType type = d.getType();
+            if(type.getType().contains("MediaServer"))
+                list.add(d);
+        }
+
+        return list;
     }
 
     public ArrayList<Device> getDMRList(){
-        return mDMRList;
+        ArrayList<Device> list = new ArrayList<Device>();
+
+        for(Device d : mDevicesList){
+            DeviceType type = d.getType();
+            if(type.getType().contains("MediaRenderer"))
+                list.add(d);
+        }
+
+        return list;
     }
 
     @Override
@@ -76,30 +92,19 @@ public class BrowseRegistryListener extends DefaultRegistryListener {
     public void deviceAdded(final Device device) {
         Log.i(TAG, "deviceAdded: " + device.getDisplayString());
 
-        mDevicesList.add(device);
-        /*runOnUiThread(new Runnable() {
-            public void run() {
-                DeviceDisplay d = new DeviceDisplay(device);
-                int position = listAdapter.getPosition(d);
-                if (position >= 0) {
-                    // Device already in the list, re-set new value at same position
-                    listAdapter.remove(d);
-                    listAdapter.insert(d, position);
-                } else {
-                    listAdapter.add(d);
-                }
-            }
-        });*/
+        int position = mDevicesList.indexOf(device);
+        if(position >= 0){
+            mDevicesList.remove(position);
+            mDevicesList.add(position, device);
+        }
+        else{
+            mDevicesList.add(device);
+        }
     }
 
     public void deviceRemoved(final Device device) {
         Log.i(TAG, "deviceRemoved: " + device.getDisplayString());
 
         mDevicesList.remove(device);
-        /*runOnUiThread(new Runnable() {
-            public void run() {
-                listAdapter.remove(new DeviceDisplay(device));
-            }
-        });*/
     }
 }
