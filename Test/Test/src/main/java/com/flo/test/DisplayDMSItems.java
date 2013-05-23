@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import org.teleal.cling.support.model.item.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,8 @@ import java.util.List;
  */
 public class DisplayDMSItems extends ListFragment implements BrowseCallback{
     private static String TAG = BrowseDMSFragment.class.getName();
+
+    private UPnPContentAdapter mListAdapter;
 
     public DisplayDMSItems() {
         // Empty constructor required for fragment subclasses
@@ -30,14 +33,24 @@ public class DisplayDMSItems extends ListFragment implements BrowseCallback{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mListAdapter = new UPnPContentAdapter(getActivity());
+        setListAdapter(mListAdapter);
+
         String page = "DMS Items";
         getActivity().setTitle(page);
+
+        updateListViewContent();
     }
 
     @Override
     public void onDestroy() {
         Log.i(TAG, "onDestroy");
         super.onDestroy();
+    }
+
+    private void updateListViewContent(){
+        ArrayList<UPnPContent> list = UPnPController.getInstance().getLastBrowseResult();
+        mListAdapter.updateContentList(list);
     }
 
     @Override

@@ -25,7 +25,7 @@ public class UPnPContentAdapter extends BaseAdapter {
         mInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void updateDeviceList(ArrayList<UPnPContent> items){
+    public void updateContentList(ArrayList<UPnPContent> items){
         mData.clear();
         mData.addAll(items);
     }

@@ -21,7 +21,6 @@ public class BrowseDMSFragment extends ListFragment implements BrowseCallback{
     private static String TAG = BrowseDMSFragment.class.getName();
 
     private UPnPDeviceAdapter mListAdapter;
-    //old one --> private ArrayAdapter<DeviceDisplay> mListAdapter;
 
     public BrowseDMSFragment() {
         // Empty constructor required for fragment subclasses
@@ -66,7 +65,7 @@ public class BrowseDMSFragment extends ListFragment implements BrowseCallback{
 
         Log.i(TAG, "onListItemClick --> " + dd.toString());
 
-        UPnPController.getInstance().browse(d, "0", BrowseFlag.DIRECT_CHILDREN, this);
+        UPnPController.getInstance().dms_browse(d, "0", BrowseFlag.DIRECT_CHILDREN, this);
     }
 
     @Override

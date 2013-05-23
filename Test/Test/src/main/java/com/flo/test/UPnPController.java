@@ -20,6 +20,7 @@ import org.teleal.cling.support.contentdirectory.callback.Browse;
 import org.teleal.cling.support.model.BrowseFlag;
 import org.teleal.cling.support.model.DIDLContent;
 import org.teleal.cling.support.model.MediaInfo;
+import org.teleal.cling.support.model.container.Container;
 import org.teleal.cling.support.model.item.Item;
 import org.teleal.cling.support.renderingcontrol.callback.GetMute;
 import org.teleal.cling.support.renderingcontrol.callback.GetVolume;
@@ -295,6 +296,26 @@ public class UPnPController {
     private void updateLastBrowseResults(DIDLContent content){
         mLastBrowseResult = content;
     }
+
+    public ArrayList<UPnPContent> getLastBrowseResult() {
+        ArrayList<UPnPContent> result = new ArrayList<UPnPContent>();
+
+        List<Container> containerList = mLastBrowseResult.getContainers();
+        List<Item> itemList = mLastBrowseResult.getItems();
+
+        if(containerList != null){
+            for(Container c : containerList)
+                result.add(new UPnPContent(c));
+        }
+
+        if(itemList != null){
+            for(Item i : itemList)
+                result.add(new UPnPContent(i));
+        }
+
+        return result;
+    }
+
 
     public Device getCurrentDMR() {
         return mCurrentDMR;
