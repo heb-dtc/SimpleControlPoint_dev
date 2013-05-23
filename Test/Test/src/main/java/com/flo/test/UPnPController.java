@@ -15,12 +15,19 @@ import org.teleal.cling.model.meta.Device;
 import org.teleal.cling.model.meta.Service;
 import org.teleal.cling.model.types.UDAServiceId;
 import org.teleal.cling.registry.RegistryListener;
+import org.teleal.cling.support.avtransport.callback.*;
 import org.teleal.cling.support.contentdirectory.callback.Browse;
 import org.teleal.cling.support.model.BrowseFlag;
 import org.teleal.cling.support.model.DIDLContent;
+import org.teleal.cling.support.model.MediaInfo;
 import org.teleal.cling.support.model.item.Item;
+import org.teleal.cling.support.renderingcontrol.callback.GetMute;
+import org.teleal.cling.support.renderingcontrol.callback.GetVolume;
+import org.teleal.cling.support.renderingcontrol.callback.SetMute;
+import org.teleal.cling.support.renderingcontrol.callback.SetVolume;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,6 +44,11 @@ public class UPnPController {
     private BrowseRegistryListener mRegistryListener = new BrowseRegistryListener();
 
     private boolean mIsCpStarted = false;
+
+    private Device mCurrentDMS = null;
+    private Device mCurrentDMR = null;
+
+    private DIDLContent mLastBrowseResult;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -95,7 +107,10 @@ public class UPnPController {
         }
     }
 
-    public void browse(Device d, String id, BrowseFlag flag, final BrowseCallback cbInterface){
+    /*
+        DMS API calls
+     */
+    public void dms_browse(Device d, String id, BrowseFlag flag, final BrowseCallback cbInterface){
         if(mIsCpStarted){
             Log.i(TAG, "browse");
 
@@ -106,9 +121,8 @@ public class UPnPController {
                 public void received(ActionInvocation actionInvocation, DIDLContent didlContent) {
                     Log.i(TAG, "browse, received");
 
-                    final List<Item> items = didlContent.getItems();
-
-                    cbInterface.browseResultList(items);
+                    updateLastBrowseResults(didlContent);
+                    cbInterface.browseResultList(null);
                 }
 
                 @Override
@@ -122,6 +136,180 @@ public class UPnPController {
                 }
             });
         }
+    }
+
+    /*
+        DMR API calls
+     */
+
+    public void dmr_play(Device d){
+        if(mIsCpStarted){
+            Log.i(TAG, "dmr_play");
+
+            Service service = d.findService(new UDAServiceId("AVTransport"));
+
+            mUPnPService.getControlPoint().execute(new Play(service) {
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+
+                }
+            });
+        }
+    }
+
+    public void dmr_stop(Device d){
+        if(mIsCpStarted){
+            Log.i(TAG, "dmr_stop");
+
+            Service service = d.findService(new UDAServiceId("AVTransport"));
+
+            mUPnPService.getControlPoint().execute(new Stop(service) {
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+
+                }
+            });
+        }
+    }
+
+    public void dmr_pause(Device d){
+        if(mIsCpStarted){
+            Log.i(TAG, "dmr_pause");
+
+            Service service = d.findService(new UDAServiceId("AVTransport"));
+
+            mUPnPService.getControlPoint().execute(new Pause(service) {
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+
+                }
+            });
+        }
+    }
+
+    public void dmr_getMediaInfo(Device d, final DMRCallbacks cbInterface){
+        if(mIsCpStarted){
+            Log.i(TAG, "dmr_getMediaInfo");
+
+            Service service = d.findService(new UDAServiceId("AVTransport"));
+
+            mUPnPService.getControlPoint().execute(new GetMediaInfo(service) {
+                @Override
+                public void received(ActionInvocation actionInvocation, MediaInfo mediaInfo) {
+                    cbInterface.onReceiveMediaInfo(mediaInfo);
+                }
+
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+
+                }
+            });
+        }
+    }
+
+    public void dmr_setURL(Device d, String URL){
+        if(mIsCpStarted){
+            Log.i(TAG, "dmr_setURL");
+
+            Service service = d.findService(new UDAServiceId("AVTransport"));
+
+            mUPnPService.getControlPoint().execute(new SetAVTransportURI(service, URL) {
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+
+                }
+            });
+        }
+    }
+
+    public void dmr_getVolume(Device d, final DMRCallbacks cbInterface){
+        if(mIsCpStarted){
+            Log.i(TAG, "dmr_getVolume");
+
+            Service service = d.findService(new UDAServiceId("RenderingControl"));
+
+            mUPnPService.getControlPoint().execute(new GetVolume(service) {
+                @Override
+                public void received(ActionInvocation actionInvocation, int i) {
+                    cbInterface.onReceiveVolume(i);
+                }
+
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+
+                }
+            });
+        }
+    }
+
+    public void dmr_setVolume(Device d, int volume){
+        if(mIsCpStarted){
+            Log.i(TAG, "dmr_setVolume");
+
+            Service service = d.findService(new UDAServiceId("RenderingControl"));
+
+            mUPnPService.getControlPoint().execute(new SetVolume(service, volume) {
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+
+                }
+            });
+        }
+    }
+
+    public void dmr_setMute(Device d, boolean muted){
+        if(mIsCpStarted){
+            Log.i(TAG, "dmr_setMute");
+
+            Service service = d.findService(new UDAServiceId("RenderingControl"));
+
+            mUPnPService.getControlPoint().execute(new SetMute(service, muted) {
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+
+                }
+            });
+        }
+    }
+
+    public void dmr_getMute(Device d, final DMRCallbacks cbInterface){
+        if(mIsCpStarted){
+            Log.i(TAG, "dmr_getMute");
+
+            Service service = d.findService(new UDAServiceId("RenderingControl"));
+
+            mUPnPService.getControlPoint().execute(new GetMute(service) {
+                @Override
+                public void received(ActionInvocation actionInvocation, boolean b) {
+                    cbInterface.onReceiveMute(b);
+                }
+
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+
+                }
+            });
+        }
+    }
+
+    private void updateLastBrowseResults(DIDLContent content){
+        mLastBrowseResult = content;
+    }
+
+    public Device getCurrentDMR() {
+        return mCurrentDMR;
+    }
+
+    public void setCurrentDMR(Device dmr) {
+        this.mCurrentDMR = dmr;
+    }
+
+    public Device getCurrentDMS() {
+        return mCurrentDMS;
+    }
+
+    public void setCurrentDMS(Device dms) {
+        this.mCurrentDMS = dms;
     }
 
     public ArrayList<DeviceDisplay> getDmsList(){

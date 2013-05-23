@@ -9,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import org.teleal.cling.model.meta.Device;
+import org.teleal.cling.support.model.BrowseFlag;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -38,6 +42,16 @@ public class BrowseLocalFragment extends ListFragment {
 
         String page = "Browse Local Files";
         getActivity().setTitle(page);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        Log.e(TAG, "onListItemClick");
+
+        MainActivity a = (MainActivity)getActivity();
+        a.loadDisplayDMSItems();
     }
 
     public ArrayList<String> getFiles() {

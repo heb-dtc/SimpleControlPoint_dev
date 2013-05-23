@@ -2,6 +2,7 @@ package com.flo.test;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.app.Activity;
@@ -118,7 +119,7 @@ public class MainActivity extends Activity {
                 break;
             case 1: fragment = new BrowseDMSFragment();
                 break;
-            case 2: fragment = new ControlDMRFragment();
+            case 2: fragment = new ListDMRFragment();
                 break;
             case 3: fragment = new BrowseLocalFragment();
                 break;
@@ -146,6 +147,20 @@ public class MainActivity extends Activity {
     public void setTitle(CharSequence title) {
         mTitle = title;
         getActionBar().setTitle(mTitle);
+    }
+
+    public void loadDisplayDMSItems(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Fragment fragment = new DisplayDMSItems();
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.content_frame, fragment).commit();
+            }
+        });
     }
 
     /**

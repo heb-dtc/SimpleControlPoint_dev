@@ -46,6 +46,12 @@ public class BrowseDMSFragment extends ListFragment implements BrowseCallback{
         updateListViewContent();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy");
+    }
+
     private void updateListViewContent(){
         ArrayList<DeviceDisplay> list = UPnPController.getInstance().getDmsList();
         mListAdapter.updateDeviceList(list);
@@ -66,5 +72,8 @@ public class BrowseDMSFragment extends ListFragment implements BrowseCallback{
     @Override
     public void browseResultList(List<Item> list){
         Log.i(TAG, "browse results received");
+
+        MainActivity a = (MainActivity)getActivity();
+        a.loadDisplayDMSItems();
     }
 }
