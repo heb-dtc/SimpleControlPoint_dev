@@ -49,6 +49,14 @@ public class UPnPContent {
         mCreator = i.getCreator();
     }
 
+    public boolean isContainer(){
+        return (mContentType == Content_type.CONTAINER);
+    }
+
+    public String getobjectID(){
+        return  mId;
+    }
+
     public String getTitle(){
         return  mTitle;
     }

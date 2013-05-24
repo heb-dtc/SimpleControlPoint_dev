@@ -115,6 +115,8 @@ public class UPnPController {
         if(mIsCpStarted){
             Log.i(TAG, "browse");
 
+            mCurrentDMS = d;
+
             Service service = d.findService(new UDAServiceId("ContentDirectory"));
 
             mUPnPService.getControlPoint().execute(new Browse(service, id, flag) {

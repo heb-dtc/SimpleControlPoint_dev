@@ -65,6 +65,7 @@ public class BrowseDMSFragment extends ListFragment implements BrowseCallback{
 
         Log.i(TAG, "onListItemClick --> " + dd.toString());
 
+
         UPnPController.getInstance().dms_browse(d, "0", BrowseFlag.DIRECT_CHILDREN, this);
     }
 
