@@ -54,6 +54,10 @@ public class DisplayDMSItems extends ListFragment implements BrowseCallback{
         if(item.isContainer()){
             browseDown(item);
         }
+        else{
+            MainActivity a = (MainActivity)getActivity();
+            a.loadChooseDMRFragment(item);
+        }
     }
 
     @Override

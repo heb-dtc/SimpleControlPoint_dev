@@ -1,5 +1,8 @@
 package com.flo.test;
 
+import android.util.Log;
+
+import org.teleal.cling.support.model.Res;
 import org.teleal.cling.support.model.container.Container;
 import org.teleal.cling.support.model.item.Item;
 
@@ -9,16 +12,15 @@ import org.teleal.cling.support.model.item.Item;
 public class UPnPContent {
     private static String TAG = UPnPContent.class.getName();
 
-    public enum Content_type {ITEM, CONTAINER, UNKNOWN};
-
     //Content Properties
-    private Content_type mContentType;
+    private ApplicationUtils.Content_type mContentType;
 
     //Container and Item Properties
     private String mId = null;
     private String mParentID = null;
     private String mTitle = null;
     private String mCreator = null;
+    private String mURL = null;
 
     //Container only properties
     private int mChildCount = 0;
@@ -27,11 +29,11 @@ public class UPnPContent {
 
 
     public UPnPContent(){
-        mContentType = Content_type.UNKNOWN;
+        mContentType = ApplicationUtils.Content_type.UNKNOWN;
     }
 
     public UPnPContent(Container c){
-        mContentType = Content_type.CONTAINER;
+        mContentType = ApplicationUtils.Content_type.CONTAINER;
 
         mId = c.getId();
         mParentID = c.getParentID();
@@ -41,16 +43,18 @@ public class UPnPContent {
     }
 
     public UPnPContent(Item i){
-        mContentType = Content_type.ITEM;
+        mContentType = ApplicationUtils.Content_type.ITEM;
 
         mId = i.getId();
         mParentID = i.getParentID();
         mTitle = i.getTitle();
         mCreator = i.getCreator();
+        Res resource = i.getFirstResource();
+        mURL = resource.getValue();
     }
 
     public boolean isContainer(){
-        return (mContentType == Content_type.CONTAINER);
+        return (mContentType == ApplicationUtils.Content_type.CONTAINER);
     }
 
     public String getobjectID(){
@@ -59,6 +63,11 @@ public class UPnPContent {
 
     public String getTitle(){
         return  mTitle;
+    }
+
+    public String getURL(){
+        Log.e(TAG, "getURL: " + mURL);
+        return  mURL;
     }
 
 }

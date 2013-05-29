@@ -47,11 +47,6 @@ public class BrowseLocalFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
-        Log.e(TAG, "onListItemClick");
-
-        MainActivity a = (MainActivity)getActivity();
-        a.loadDisplayDMSItems();
     }
 
     public ArrayList<String> getFiles() {

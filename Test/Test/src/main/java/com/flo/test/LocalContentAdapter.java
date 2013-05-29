@@ -12,20 +12,20 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by florent.noel on 5/23/13.
+ * Created by Flo on 5/28/13.
  */
-public class UPnPContentAdapter extends BaseAdapter {
+public class LocalContentAdapter extends BaseAdapter {
 
     private Activity mActivity;
-    private ArrayList<UPnPContent> mData = new ArrayList<UPnPContent>();
+    private ArrayList<LocalContent> mData = new ArrayList<LocalContent>();
     private static LayoutInflater mInflater = null;
 
-    public UPnPContentAdapter(Activity a){
+    public LocalContentAdapter(Activity a){
         mActivity = a;
         mInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void updateContentList(ArrayList<UPnPContent> items){
+    public void updateContentList(ArrayList<LocalContent> items){
         mData.clear();
         mData.addAll(items);
     }
@@ -38,7 +38,7 @@ public class UPnPContentAdapter extends BaseAdapter {
     @Override
     public Object getItem(int i) {
         return  mData.get(i);
-   }
+    }
 
     @Override
     public long getItemId(int i) {
@@ -50,14 +50,14 @@ public class UPnPContentAdapter extends BaseAdapter {
 
         //if needed, inflate the view
         if(view == null)
-            view = mInflater.inflate(R.layout.dms_content_list_row, null);
+            view = mInflater.inflate(R.layout.local_content_list_row, null);
 
         //find the views we need
         TextView contentTitle = (TextView) view.findViewById(R.id.content_name);
-        ImageView contentIcon = (ImageView) view.findViewById(R.id.device_icon);
+        ImageView contentIcon = (ImageView) view.findViewById(R.id.content_icon);
 
         //fill the views with the values
-        UPnPContent content = mData.get(i);
+        LocalContent content = mData.get(i);
 
         contentTitle.setText(content.getTitle());
         //contentIcon.setImageBitmap(dd.getDevice().getIcons().);

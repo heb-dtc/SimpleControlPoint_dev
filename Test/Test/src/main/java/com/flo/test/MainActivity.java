@@ -121,7 +121,7 @@ public class MainActivity extends Activity {
                 break;
             case 2: fragment = new ListDMRFragment();
                 break;
-            case 3: fragment = new BrowseLocalFragment();
+            case 3: fragment = new DisplayLocalItems();
                 break;
             case 4: fragment = new SettingsFragment();
                 break;
@@ -154,6 +154,20 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 Fragment fragment = new DisplayDMSItems();
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.content_frame, fragment).commit();
+            }
+        });
+    }
+
+    public void loadChooseDMRFragment(final UPnPContent item){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Fragment fragment = new ChooseDMRFragment(item);
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
 

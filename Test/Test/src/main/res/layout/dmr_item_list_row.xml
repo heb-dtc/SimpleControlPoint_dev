@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <ImageView
+            android:id="@+id/device_icon"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:src="@drawable/ic_launcher"/>
+    <TextView
+            android:id="@+id/device_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Device Unknown"
+            android:textColor="#040404"
+            android:layout_weight="4"
+            android:typeface="sans"
+            android:textSize="20dip"
+            android:textStyle="bold"/>
+    <Button
+            android:id="@+id/pushTo_btn"
+            android:text="Play"
+            android:layout_weight="8"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+</LinearLayout>
