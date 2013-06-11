@@ -20,6 +20,8 @@ import org.teleal.cling.support.contentdirectory.callback.Browse;
 import org.teleal.cling.support.model.BrowseFlag;
 import org.teleal.cling.support.model.DIDLContent;
 import org.teleal.cling.support.model.MediaInfo;
+import org.teleal.cling.support.model.PositionInfo;
+import org.teleal.cling.support.model.TransportInfo;
 import org.teleal.cling.support.model.container.Container;
 import org.teleal.cling.support.model.item.Item;
 import org.teleal.cling.support.renderingcontrol.callback.GetMute;
@@ -190,6 +192,21 @@ public class UPnPController {
         }
     }
 
+    public void dmr_seekTo(Device d, String relativeTime){
+        if(mIsCpStarted){
+            Log.e(TAG, "dmr_seekTo");
+
+            Service service = d.findService(new UDAServiceId("AVTransport"));
+
+            mUPnPService.getControlPoint().execute(new Seek(service, relativeTime) {
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+                    Log.e(TAG, "dmr_seekTo failure");
+                }
+            });
+        }
+    }
+
     public void dmr_getMediaInfo(Device d, final DMRCallbacks cbInterface){
         if(mIsCpStarted){
             Log.i(TAG, "dmr_getMediaInfo");
@@ -204,7 +221,47 @@ public class UPnPController {
 
                 @Override
                 public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+                    Log.e(TAG, "dmr_getMediaInfo failure");
+                }
+            });
+        }
+    }
 
+    public void dmr_getPositionInfo(Device d, final DMRCallbacks cbInterface){
+        if(mIsCpStarted){
+            Log.e(TAG, "dmr_getPositionInfo");
+
+            Service service = d.findService(new UDAServiceId("AVTransport"));
+
+            mUPnPService.getControlPoint().execute(new GetPositionInfo(service) {
+                @Override
+                public void received(ActionInvocation actionInvocation, PositionInfo positionInfo) {
+                    cbInterface.onReceivePositionInfo(positionInfo);
+                }
+
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+                    Log.e(TAG, "dmr_getPositionInfo failure");
+                }
+            });
+        }
+    }
+
+    public void dmr_getTransportInfo(Device d, final DMRCallbacks cbInterface){
+        if(mIsCpStarted){
+            Log.e(TAG, "dmr_getPositionInfo");
+
+            Service service = d.findService(new UDAServiceId("AVTransport"));
+
+            mUPnPService.getControlPoint().execute(new GetTransportInfo(service) {
+                @Override
+                public void received(ActionInvocation actionInvocation, TransportInfo transportInfo) {
+                    cbInterface.onReceiveTransportInfo(transportInfo);
+                }
+
+                @Override
+                public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
+                    Log.e(TAG, "dmr_getTransportInfo failure");
                 }
             });
         }
@@ -219,7 +276,7 @@ public class UPnPController {
             mUPnPService.getControlPoint().execute(new SetAVTransportURI(service, URL) {
                 @Override
                 public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
-
+                    Log.e(TAG, "dmr_setURL failure");
                 }
             });
         }

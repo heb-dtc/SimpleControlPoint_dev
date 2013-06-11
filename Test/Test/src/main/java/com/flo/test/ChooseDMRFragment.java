@@ -1,6 +1,8 @@
 package com.flo.test;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -130,10 +132,17 @@ public class ChooseDMRFragment extends ListFragment {
         if(mItem != null && dev != null){
             UPnPController.getInstance().dmr_setURL(dev.getDevice(), mItem.getURL());
             UPnPController.getInstance().dmr_play(dev.getDevice());
-            UPnPController.getInstance().dmr_play(dev.getDevice());
-            UPnPController.getInstance().dmr_play(dev.getDevice());
-            UPnPController.getInstance().dmr_play(dev.getDevice());
 
         }
+    }
+
+    private void loadControlDMRFragment(DeviceDisplay dev){
+        UPnPController.getInstance().setCurrentDMR(dev.getDevice());
+
+        Fragment fragment = new ControlDMRFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.content_frame, fragment).commit();
     }
 }

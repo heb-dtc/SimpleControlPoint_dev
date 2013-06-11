@@ -4,6 +4,22 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+    <TextView android:id="@+id/tv_duration"
+              android:text="00:00:00"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"/>
+    <TextView android:id="@+id/tv_uri"
+              android:text="No media"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"/>
+    <Button android:id="@+id/btn_mute"
+            android:text="Mute/UnMute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawSelectorOnTop="false"/>
     <Button android:id="@+id/btn_pause"
             android:text="Pause"
             android:layout_width="match_parent"
@@ -34,4 +50,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawSelectorOnTop="false"/>
+    <SeekBar
+            android:id="@+id/seek_bar_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <SeekBar
+            android:id="@+id/seek_bar_position"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 </LinearLayout>
