@@ -66,6 +66,16 @@ public class DisplayDMSItems extends ListFragment implements BrowseCallback{
         super.onDestroy();
     }
 
+    private void browseMeta(UPnPContent item){
+        Log.i(TAG, "browseMeta");
+
+        Device dms = UPnPController.getInstance().getCurrentDMS();
+
+        if(item != null && dms != null){
+            UPnPController.getInstance().dms_browse(dms, item.getobjectID(), BrowseFlag.METADATA, this);
+        }
+    }
+
     private void browseDown(UPnPContent item){
         Log.i(TAG, "browseDown");
 
