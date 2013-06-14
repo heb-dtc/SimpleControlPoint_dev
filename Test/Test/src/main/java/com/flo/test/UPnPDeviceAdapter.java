@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import org.teleal.cling.model.meta.Icon;
 import org.teleal.cling.model.meta.RemoteDeviceIdentity;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -73,6 +72,7 @@ public class UPnPDeviceAdapter extends BaseAdapter {
         //fill the views with the values
         DeviceDisplay dd = mData.get(i);
         Icon[] listIcon = dd.getDevice().getIcons();
+
         RemoteDeviceIdentity id = (RemoteDeviceIdentity)dd.getDevice().getIdentity();
         String iconURL = "http://" + id.getDescriptorURL().getAuthority().toString();
 
