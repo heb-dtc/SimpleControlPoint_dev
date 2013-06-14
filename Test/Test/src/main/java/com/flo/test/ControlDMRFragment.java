@@ -183,6 +183,7 @@ public class ControlDMRFragment extends Fragment implements DMRCallbacks{
         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
             String seekToString = ApplicationUtils.secondsToTimeString(i);
             Log.e(TAG, "onProgressChanged --> " + seekToString);
+            UPnPController.getInstance().dmr_seekTo(mDMR, seekToString);
         }
 
         @Override

@@ -132,12 +132,12 @@ public class UPnPController {
 
                 @Override
                 public void updateStatus(Status status) {
-                    Log.i(TAG, "browse, update status");
+                    Log.e(TAG, "browse, update status");
                 }
 
                 @Override
                 public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
-                    Log.i(TAG, "browse, failure");
+                    Log.e(TAG, "browse, failure");
                 }
             });
         }

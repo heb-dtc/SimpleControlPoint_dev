@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +17,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.teleal.cling.model.meta.Icon;
+import org.teleal.cling.model.meta.RemoteDeviceIdentity;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by florent.noel on 5/29/13.
@@ -30,6 +36,7 @@ public class ChooseDMRFragment extends ListFragment {
 
         private Activity mActivity;
         private ArrayList<DeviceDisplay> mData = new ArrayList<DeviceDisplay>();
+        private HashMap<String, Bitmap> mDeviceIconsList = new  HashMap<String, Bitmap>();
         private LayoutInflater mInflater = null;
 
         public DMRAdapter(Activity a){
@@ -79,13 +86,48 @@ public class ChooseDMRFragment extends ListFragment {
                 }
             });
 
-            //fill the views with the values
-            //Bitmap img = new Bitmap();
+            Icon[] listIcon = dd.getDevice().getIcons();
+            RemoteDeviceIdentity id = (RemoteDeviceIdentity)dd.getDevice().getIdentity();
+            String iconURL = "http://" + id.getDescriptorURL().getAuthority().toString();
+
+            for(Icon ic : listIcon){
+                if(ic.getHeight() == 120){
+                    iconURL += ic.getUri();
+                    break;
+                }
+            }
+
+            Log.e(TAG, iconURL);
+
+            String devName = dd.toString();
+
+            if(!mDeviceIconsList.containsKey(devName)){
+                new DownloadIDeviceIconTask(devName, deviceIcon).execute(iconURL);
+            }
 
             deviceNameView.setText(dd.toString());
-            //deviceIcon.setImageBitmap(dd.getDevice().getIcons().);
 
             return view;
+        }
+
+        private class DownloadIDeviceIconTask extends AsyncTask<String, Void, Bitmap> {
+
+            ImageView mView;
+            String mDeviceName;
+
+            DownloadIDeviceIconTask(String deviceName, ImageView view){
+                mView = view;
+            }
+
+            @Override
+            protected Bitmap doInBackground(String... urls) {
+                return ApplicationUtils.decodeSampledBitmapFromNetwork(urls[0], false, 0, 0);
+            }
+
+            protected void onPostExecute(Bitmap result) {
+                mView.setImageBitmap(result);
+                mDeviceIconsList.put(mDeviceName, result);
+            }
         }
     }
 
@@ -132,8 +174,12 @@ public class ChooseDMRFragment extends ListFragment {
         if(mItem != null && dev != null){
             UPnPController.getInstance().dmr_setURL(dev.getDevice(), mItem.getURL());
             UPnPController.getInstance().dmr_play(dev.getDevice());
-
+            UPnPController.getInstance().dmr_play(dev.getDevice());
+            UPnPController.getInstance().dmr_play(dev.getDevice());
+            UPnPController.getInstance().dmr_play(dev.getDevice());
         }
+
+        loadControlDMRFragment(dev);
     }
 
     private void loadControlDMRFragment(DeviceDisplay dev){
